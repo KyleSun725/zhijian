@@ -1,0 +1,20 @@
+{
+  "name": "zhijian",
+  "version": "1.0.0",
+  "description": "纸间 — 轻量的本地 PDF 阅读器：批注、页面整理、只读当前文档的 AI 助手",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:no-open": "node server.js --no-open",
+    "build:demo": "node tools/make-demo.js",
+    "scene": "node tools/scene.mjs",
+    "mock-llm": "node tools/mock-llm.js"
+  },
+  "dependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
+    "katex": "^0.19.1",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "6.5.438"
+  }
+}

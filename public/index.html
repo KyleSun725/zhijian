@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23b0512d'/%3E%3Cpath d='M11 8h8a2 2 0 0 1 2 2v14l-6-3.4L9 24V10a2 2 0 0 1 2-2z' fill='%23fff' opacity='.92'/%3E%3C/svg%3E" />
+<title>纸间 · PDF 阅读与批注</title>
+<link rel="stylesheet" href="css/app.css" />
+<link rel="stylesheet" href="vendor/katex/katex.min.css" />
+</head>
+<body>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-open" viewBox="0 0 24 24"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4.2l1.8 2h7A1.5 1.5 0 0 1 19 9.5v7A1.5 1.5 0 0 1 17.5 18h-13A1.5 1.5 0 0 1 3 16.5z"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M14.5 6 8.5 12l6 6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h4M12 17h8"/><circle cx="15" cy="7" r="2.1"/><circle cx="10" cy="17" r="2.1"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></symbol>
+  <symbol id="i-pages" viewBox="0 0 24 24"><rect x="4" y="3.5" width="12" height="15" rx="1.6"/><path d="M8 21h10.5A1.5 1.5 0 0 0 20 19.5V7"/></symbol>
+  <symbol id="i-toc" viewBox="0 0 24 24"><path d="M4 6h16M4 12h11M4 18h7"/><circle cx="19" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="15" cy="18" r="1.2" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M5 4.5h14v9l-6 6H5z"/><path d="M13 19.5v-5h6"/></symbol>
+  <symbol id="i-highlight" viewBox="0 0 24 24"><path d="M4 20h5l9.5-9.5a2.1 2.1 0 0 0-3-3L6 17z"/><path d="M13.5 6.5l3 3"/></symbol>
+  <symbol id="i-underline" viewBox="0 0 24 24"><path d="M7 4v7a5 5 0 0 0 10 0V4"/><path d="M5 20h14"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.2l1.9 5.1 5.1 1.9-5.1 1.9L12 17.2l-1.9-5.1L5 10.2l5.1-1.9z"/><path d="M18.5 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H8l-4 2.5v-5.2A7.5 7.5 0 1 1 20 11.5z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V5.2A1.2 1.2 0 0 1 10.7 4h2.6a1.2 1.2 0 0 1 1.2 1.2V7M6.5 7l.8 12.1A1.4 1.4 0 0 0 8.7 20.5h6.6a1.4 1.4 0 0 0 1.4-1.4L17.5 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></symbol>
+  <symbol id="i-fileplus" viewBox="0 0 24 24"><path d="M13 3.5H7A1.5 1.5 0 0 0 5.5 5v14A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5V9z"/><path d="M13 3.5V9h5.5"/><path d="M12 12.5v5M9.5 15h5"/></symbol>
+  <symbol id="i-pagesplus" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="10" height="15" rx="1.5"/><path d="M17 8v10M12.5 13H21.5" transform="translate(-3.2 2.5)"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 4.5h11l3.5 3.5v11.5A1.5 1.5 0 0 1 18 21H6a1.5 1.5 0 0 1-1.5-1.5v-13A1.5 1.5 0 0 1 6 5z" transform="translate(-.5 -1)"/><path d="M8 3.5v5h7v-5M8 21v-6h8v6" transform="translate(-.5 -1)"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="18" cy="12" r="1.4" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.2"/><path d="M15.6 15.6L20 20"/></symbol>
+  <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.4 5.6"/><path d="M20 5.5V11h-5.5"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4l10-10a2.3 2.3 0 0 0-3.2-3.2L4.8 16.8z"/><path d="M13.5 7.5l3.2 3.2"/></symbol>
+  <symbol id="i-branch" viewBox="0 0 24 24"><circle cx="6.5" cy="5" r="2.1"/><circle cx="6.5" cy="19" r="2.1"/><circle cx="17.5" cy="8.5" r="2.1"/><path d="M6.5 7.1v9.8"/><path d="M6.5 12.4h3.6a7.4 7.4 0 0 0 7.4-7.4"/></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn" id="btnOpen" title="打开 PDF（Ctrl+O）"><svg><use href="#i-open"/></svg></button>
+    <div class="brand"><span class="brand-mark"></span>纸间</div>
+  </div>
+
+  <div class="doc-title" id="docTitle">未打开文档</div>
+
+  <div class="topbar-right">
+    <div class="page-nav" id="pageNav">
+      <button class="icon-btn sm" id="btnPrevPage" title="上一页（←）"><svg><use href="#i-left"/></svg></button>
+      <span class="page-label"><input id="pageInput" value="1" inputmode="numeric" /> <em>/</em> <span id="pageTotal">0</span></span>
+      <button class="icon-btn sm" id="btnNextPage" title="下一页（→）"><svg><use href="#i-right"/></svg></button>
+    </div>
+    <div class="zoom">
+      <button class="icon-btn sm" id="btnZoomOut" title="缩小（-）"><svg><use href="#i-minus"/></svg></button>
+      <button class="zoom-label" id="zoomLabel" title="适应宽度">100%</button>
+      <button class="icon-btn sm" id="btnZoomIn" title="放大（+）"><svg><use href="#i-plus"/></svg></button>
+    </div>
+    <div class="sep"></div>
+    <button class="icon-btn" id="btnOrganize" title="整理页面"><svg><use href="#i-pages"/></svg></button>
+    <button class="icon-btn" id="btnTheme" title="切换主题"><svg><use href="#i-moon"/></svg></button>
+    <button class="icon-btn" id="btnSettings" title="设置"><svg><use href="#i-settings"/></svg></button>
+    <button class="btn-accent" id="btnChatToggle"><svg><use href="#i-spark"/></svg>问 AI</button>
+  </div>
+</header>
+
+<main class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-tabs" role="tablist">
+      <button class="side-tab active" data-panel="toc" role="tab">目录</button>
+      <button class="side-tab" data-panel="pages" role="tab">缩略图</button>
+      <button class="side-tab" data-panel="notes" role="tab">笔记 <span class="count" id="noteCount">0</span></button>
+    </div>
+    <div class="side-body">
+      <div class="panel active" id="panel-toc"><div class="panel-empty">打开文档后显示目录</div></div>
+      <div class="panel" id="panel-pages"><div class="panel-empty">打开文档后显示缩略图</div></div>
+      <div class="panel" id="panel-notes"><div class="panel-empty">还没有批注。选中文字即可高亮或记笔记。</div></div>
+    </div>
+  </aside>
+
+  <section class="reader" id="reader">
+    <div class="pages" id="pages"></div>
+    <div class="dropzone" id="dropzone">
+      <div class="dz-inner">
+        <div class="dz-art">
+          <svg viewBox="0 0 120 140" fill="none" aria-hidden="true">
+            <rect x="18" y="10" width="76" height="104" rx="6" fill="currentColor" opacity=".07"/>
+            <rect x="26" y="18" width="76" height="104" rx="6" fill="currentColor" opacity=".1"/>
+            <rect x="34" y="26" width="76" height="104" rx="6" fill="#fff" stroke="currentColor" stroke-opacity=".25"/>
+            <path d="M48 50h48M48 64h48M48 78h30" stroke="currentColor" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
+            <path d="M92 40l3.4 9.2 9.2 3.4-9.2 3.4L92 65.2l-3.4-9.2-9.2-3.4 9.2-3.4z" fill="var(--accent)" opacity=".9"/>
+          </svg>
+        </div>
+        <h1>把 PDF 拖进来</h1>
+        <p>在页边写批注，随手整理页面，遇到不懂的就问 AI。</p>
+        <div class="dz-actions">
+          <button class="btn-accent lg" id="btnPick">选择文件</button>
+          <button class="btn-ghost lg" id="btnDemo">看看示例</button>
+        </div>
+        <div class="dz-hint">支持 .pdf · 全部在本机处理，除非你主动使用 AI</div>
+        <div class="recent" id="recent" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="chat-resizer" id="chatResizer" title="拖动调整宽度，双击复位"></div>
+
+  <aside class="chat-panel" id="chatPanel">
+    <div class="chat-head">
+      <div class="chat-title">
+        <span class="chat-orb"></span>
+        <span>阅读助手</span>
+        <span class="badge-soft" id="chatScope">仅当前文档</span>
+      </div>
+      <div class="chat-head-actions">
+        <button class="icon-btn sm" id="btnNewChat" title="新对话"><svg><use href="#i-plus"/></svg></button>
+        <button class="icon-btn sm" id="btnHistory" title="历史对话"><svg><use href="#i-toc"/></svg></button>
+        <button class="icon-btn sm" id="btnChatClose" title="收起"><svg><use href="#i-x"/></svg></button>
+      </div>
+    </div>
+    <div class="chat-history" id="chatHistory" hidden>
+      <div class="ch-head">
+        <span>历史对话</span>
+        <button class="icon-btn sm" id="btnHistoryClose" title="关闭"><svg><use href="#i-x"/></svg></button>
+      </div>
+      <div class="ch-list" id="chatList"></div>
+    </div>
+    <div class="chat-scroll" id="chatScroll">
+      <div class="chat-intro" id="chatIntro">
+        <div class="intro-art"><svg><use href="#i-spark"/></svg></div>
+        <h2>就这一份文档提问</h2>
+        <p>我只读当前打开的 PDF，答案会标注页码。没设置 API Key 也能先看界面。</p>
+      </div>
+    </div>
+    <div class="chat-controls">
+      <div class="ctrl-row">
+        <span class="ctrl-label">思考</span>
+        <div class="segmented tiny" id="thinkSeg">
+          <button data-effort="off" title="不思考，最快">关</button>
+          <button data-effort="low" title="轻量思考">低</button>
+          <button data-effort="high" class="active" title="默认强度">高</button>
+          <button data-effort="max" title="最深，最慢">最高</button>
+        </div>
+      </div>
+      <div class="ctrl-row">
+        <span class="ctrl-label">范围</span>
+        <div class="segmented tiny" id="scopeSeg">
+          <button data-scope="full" class="active" title="整份文档都给模型（超出上下文时会提示并降级）">全文</button>
+          <button data-scope="smart" title="按问题挑最相关的页">智能</button>
+          <button data-scope="page" title="只给当前页和相邻页">本页</button>
+        </div>
+        <span class="scope-info" id="scopeInfo"></span>
+      </div>
+    </div>
+    <div class="chat-quick" id="chatQuick">
+      <button data-act="summary">概括全文</button>
+      <button data-act="page">总结本页</button>
+      <button data-act="explain">解释选中</button>
+      <button data-act="quiz">出 5 道复习题</button>
+    </div>
+    <form class="chat-input" id="chatForm">
+      <textarea id="chatText" rows="1" placeholder="就这份文档提问…"></textarea>
+      <div class="chat-input-actions">
+        <button type="button" class="icon-btn sm" id="btnChatStop" hidden title="停止"><svg><use href="#i-x"/></svg></button>
+        <button type="submit" class="send-btn" id="btnChatSend" title="发送（Enter）"><svg><use href="#i-up"/></svg></button>
+      </div>
+    </form>
+    <div class="chat-foot"><span id="chatMeta">未配置模型</span></div>
+  </aside>
+</main>
+
+<!-- 选中文字后的浮动工具条 -->
+<div class="sel-toolbar" id="selToolbar" hidden>
+  <div class="swatches" id="swatches">
+    <button class="swatch" data-color="amber" title="黄色高亮"></button>
+    <button class="swatch" data-color="sage" title="绿色高亮"></button>
+    <button class="swatch" data-color="sky" title="蓝色高亮"></button>
+    <button class="swatch" data-color="rose" title="粉色高亮"></button>
+  </div>
+  <button data-act="highlight" title="高亮（H）"><svg><use href="#i-highlight"/></svg></button>
+  <button data-act="underline" title="下划线（U）"><svg><use href="#i-underline"/></svg></button>
+  <button data-act="note" title="添加笔记（N）"><svg><use href="#i-note"/></svg></button>
+  <button data-act="ask" class="ask" title="问 AI（A）"><svg><use href="#i-spark"/></svg><span>问 AI</span></button>
+</div>
+
+<!-- 设置 -->
+<div class="modal" id="settingsModal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card">
+    <div class="modal-head">
+      <button class="icon-btn sm" id="btnViewBack" title="返回设置" hidden><svg><use href="#i-left"/></svg></button>
+      <h2 id="modalTitle">设置</h2>
+      <button class="icon-btn sm" data-close><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body" id="viewSettings">
+      <div class="help-bar">
+        <span class="help-bar-label">快速上手</span>
+        <button type="button" class="help-chip" data-view="shortcuts"><span>⌨</span>快捷键</button>
+        <button type="button" class="help-chip" data-view="guide"><span>?</span>使用说明</button>
+      </div>
+      <div class="field language-field">
+        <span class="field-label">界面语言</span>
+        <div class="segmented" id="languageSeg" aria-label="界面语言">
+          <button type="button" data-language="zh-CN" lang="zh-CN" data-no-i18n>中文</button>
+          <button type="button" data-language="en" lang="en" data-no-i18n>English</button>
+        </div>
+        <span class="field-hint">立即生效，并在这台设备上记住。</span>
+      </div>
+      <div class="divider"></div>
+      <div class="field">
+        <span class="field-label">模型服务</span>
+        <div class="segmented" id="providerSeg">
+          <button data-provider="deepseek" class="active">DeepSeek</button>
+          <button data-provider="openai">OpenAI</button>
+          <button data-provider="custom">自定义</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-head">
+          <span class="field-label">模型</span>
+          <button type="button" class="link-btn" id="btnFetchModels">从接口获取列表</button>
+        </div>
+        <input id="cfgModel" type="text" spellcheck="false" placeholder="deepseek-flash" />
+        <div class="chips" id="modelChips"></div>
+      </div>
+      <div class="field">
+        <span class="field-label">API 地址</span>
+        <input id="cfgBaseUrl" type="text" spellcheck="false" placeholder="https://api.deepseek.com" />
+        <span class="field-hint">兼容 OpenAI 格式的服务都可以，例如中转站或本地 Ollama。</span>
+      </div>
+      <div class="field">
+        <span class="field-label">API Key</span>
+        <input id="cfgKey" type="password" spellcheck="false" placeholder="sk-…" autocomplete="off" />
+        <span class="field-hint" id="keyHint">保存在本机 data/config.json，不会上传到别处。</span>
+      </div>
+      <div class="test-row">
+        <button class="btn-ghost" id="btnTest">测试连接</button>
+        <span class="test-result" id="testResult"></span>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="cfgCompat" />
+        <span>兼容模式（不发送思考参数）</span>
+      </label>
+      <div class="divider"></div>
+      <div class="field">
+        <span class="field-label">配色</span>
+        <div class="theme-grid" id="themeGrid"></div>
+      </div>
+      <div class="field">
+        <span class="field-label">PDF 夜间显示</span>
+        <div class="segmented" id="pdfDarkSeg">
+          <button data-pdfdark="smart">智能反色</button>
+          <button data-pdfdark="dim">调暗</button>
+          <button data-pdfdark="off">关</button>
+        </div>
+        <span class="field-hint">深色主题下生效：白底页自动变深色，本来就有大量图片的深色页保持原样。</span>
+      </div>
+    </div>
+
+    <div class="modal-body help-body" id="viewShortcuts" hidden>
+      <div class="kbd-row"><span class="keys"><kbd>Ctrl</kbd><kbd>O</kbd></span><span class="desc">打开 PDF 文件</span></div>
+      <div class="kbd-row"><span class="keys"><kbd>←</kbd><kbd>→</kbd></span><span class="desc">上一页 / 下一页（也可用 PageUp / PageDown）</span></div>
+      <div class="kbd-row"><span class="keys"><kbd>+</kbd><kbd>−</kbd></span><span class="desc">放大 / 缩小</span></div>
+      <div class="kbd-row"><span class="keys"><kbd>H</kbd></span><span class="desc">把选中的文字直接高亮</span></div>
+      <div class="kbd-row"><span class="keys"><kbd>Esc</kbd></span><span class="desc">关掉工具条、菜单或弹窗</span></div>
+      <div class="kbd-row"><span class="keys"><kbd>Enter</kbd></span><span class="desc">发送问题（Shift + Enter 换行）</span></div>
+      <div class="kbd-row"><span class="keys"><kbd>Ctrl</kbd><kbd>Enter</kbd></span><span class="desc">在笔记框里保存</span></div>
+      <div class="kbd-row"><span class="keys"><kbd>拖入</kbd></span><span class="desc">把 PDF 拖进窗口即可打开</span></div>
+      <div class="kbd-row"><span class="keys"><kbd>点百分比</kbd></span><span class="desc">回到「适应宽度」</span></div>
+      <div class="help-tip">鼠标：选中文字会浮出工具条；写了笔记的批注左侧有圆点，点它可编辑或删除。</div>
+    </div>
+
+    <div class="modal-body help-body" id="viewGuide" hidden>
+      <div class="guide-block">
+        <h3><span>1</span>阅读与批注</h3>
+        <p>把 PDF 拖进来，滚轮或方向键翻页。选中任意文字，会浮出工具条：四色高亮、下划线、写笔记、问 AI。</p>
+        <p>写了笔记的批注左侧有个小圆点，点它可以编辑、删除或就这段提问。左栏「笔记」按页汇总所有批注，点一条会跳回原文并闪一下。</p>
+        <p class="note">批注自动保存，下次打开同一份 PDF 会恢复。</p>
+      </div>
+      <div class="guide-block">
+        <h3><span>2</span>整理页面</h3>
+        <p>点顶栏的「整理页面」进缩略图视图：删除某页、插入空白页、插入另一个 PDF 的页面，然后「保存到文件」写回原文件。</p>
+        <p class="note">保存会用 pdf-lib 重建文件，正文和批注位置会保留，但原来的书签、表单、数字签名会丢失。想保险就点「另存为」。</p>
+      </div>
+      <div class="guide-block">
+        <h3><span>3</span>AI 助手</h3>
+        <p>右侧面板只读当前这份文档。先在设置里选服务商、填 Key，然后就能提问。</p>
+        <p><strong>范围</strong>：全文（默认）/ 智能（按问题挑页）/ 本页。右边会显示这份文档多少字、大概多少 token。</p>
+        <p><strong>思考</strong>：关 / 低 / 高 / 最高，控制模型想多久，每次提问前都能改。</p>
+        <p>每条回答开头的小标签会写明这次给了模型多少内容，比如「已附上全文 · 240 页 · 18.2 万字」；回答里的 <span class="cite">p.12</span> 点一下就跳到第 12 页。</p>
+      </div>
+      <div class="guide-block">
+        <h3><span>4</span>数据在哪</h3>
+        <p>批注和对话存在这台电脑的浏览器里；API Key 存在 <code>data/config.json</code>。</p>
+        <p class="note">除了你主动使用 AI，PDF 不会离开本机。扫描版 PDF 没有文字层，选不中、也问不了，需要先 OCR。</p>
+      </div>
+    </div>
+
+    <div class="modal-foot" id="modalFoot">
+      <button class="btn-ghost" data-close>取消</button>
+      <button class="btn-accent" id="btnSaveSettings">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 整理页面 -->
+<div class="sheet" id="organizeSheet" hidden>
+  <div class="sheet-head">
+    <div class="sheet-title">
+      <h2>整理页面</h2>
+      <span class="sheet-sub" id="orgSub"></span>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn-ghost" id="btnOrgInsertPdf"><svg><use href="#i-fileplus"/></svg>插入其他 PDF</button>
+      <button class="btn-ghost" id="btnOrgInsertBlank"><svg><use href="#i-plus"/></svg>插入空白页</button>
+      <button class="btn-accent" id="btnOrgSave"><svg><use href="#i-save"/></svg>保存到文件</button>
+      <button class="btn-ghost" id="btnOrgSaveAs">另存为…</button>
+      <button class="icon-btn" id="btnOrgClose"><svg><use href="#i-x"/></svg></button>
+    </div>
+  </div>
+  <div class="sheet-body">
+    <div class="org-grid" id="orgGrid"></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="ctx-menu" id="annoMenu" hidden>
+  <button data-act="edit-note">编辑笔记</button>
+  <button data-act="ask-about">就此提问</button>
+  <button data-act="delete" class="danger">删除批注</button>
+</div>
+
+<script src="vendor/pdf-lib.min.js"></script>
+<script src="vendor/katex/katex.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

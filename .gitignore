@@ -1,0 +1,31 @@
+node_modules/
+.tmp/
+.npm-cache/
+# Local settings can contain API keys. Never publish this directory.
+/data/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.bak
+*.backup
+*.log
+
+# Generated local previews and design iterations (rebuild with render-readme.ps1).
+/docs/*-preview.html
+/docs/assets/*preview*.jpg
+/docs/assets/readme-comic-full.jpg
+/docs/assets/settings-en.jpg
+/docs/assets/readme-hero.svg
+/docs/assets/readme-workflow.svg
+
+# Local editor / agent state.
+.vscode/
+.idea/
+.codex/
+.agents/
+Thumbs.db
+.DS_Store
