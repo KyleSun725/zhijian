@@ -99,3 +99,9 @@ See the [user guide](docs/USAGE.en.md) for controls, shortcuts, and development 
 ---
 
 Good luck with your exams. And your keyboard.
+
+## Acknowledgments
+
+Thanks to **DeepSeek Harness**, **OpenAI's large language models**, and **Codex** for their help building Zhijian.
+
+The human kept asking for "one tiny change." They helped turn countless tiny changes into working code. Workplace injuries sustained by Ctrl, C, and V are, regrettably, outside the project's warranty.
